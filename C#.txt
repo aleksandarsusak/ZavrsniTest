@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TestSusakCSharp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //Zadatak 1.
+            Console.WriteLine("Unesi godinu: ");
+            int year;
+            year = Convert.ToInt32(Console.ReadLine());
+
+            if (year % 4 == 0 || year % 100 != 0)
+            {
+                Console.WriteLine("Godina {0} je prestupna", year);
+            }
+            else if (year % 400 == 0)
+            {
+                Console.WriteLine("Godina {0} nije prestupna", year);
+            }
+            Console.ReadKey();
+
+
+            //Zadatak 2.
+            int num;
+            int count = 1;
+            Console.WriteLine("Unesite broje od 6 do 10: ");
+            num = Convert.ToInt32(Console.ReadLine());
+            if (num > 10 || num < 6)
+            {
+                Console.WriteLine("Uneti broj nije u opsegu od 6 do 10.");
+                Console.ReadKey();
+            }
+            else
+            {   
+                for (int i = 1; i <= num; i++)
+                {
+                    for (int j = 1; j <= count; j++)
+                        Console.WriteLine(count + " ");
+                    count = count + 1;
+                }
+                Console.ReadKey();
+            }
+        }
+    }
+}
+
