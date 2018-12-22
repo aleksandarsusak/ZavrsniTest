@@ -1,0 +1,108 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Support;
+using OpenQA.Selenium.Support.UI;
+using System.IO;
+
+
+namespace TestSusakSelenium
+{
+    class Class1
+    {
+        IWebDriver driver;
+        string isDisplayed;
+
+        [SetUp]
+        public void OpenBrowser()
+        {
+            driver = new FirefoxDriver();
+        }
+        public void GotoURL(string url)
+        {
+            this.driver.Url = url;
+        }
+        public void Sleep(int seconds)
+        {
+            Thread.Sleep(TimeSpan.FromSeconds(seconds));
+        }
+        public IWebElement WaitForElement(By by, int timeOutSeconds)
+        {
+            if (timeOutSeconds > 0)
+            {
+                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeOutSeconds));
+                wait.Until(drv => drv.FindElement(by));
+            }
+            return driver.FindElement(by);
+        }
+
+        [Test]
+        public void Sel()
+        {
+            GotoURL("http://test.qa.rs/");
+            Sleep(3);
+
+            IWebElement registration = WaitForElement(By.XPath("//a[@href='/new']"), 5);
+            registration.Click();
+
+            string inFirstName = "Aleksandar";
+            string inLastName = "Susak";
+            string inUserName = "susakal";
+            string inEmail = "aleksandar.susak@yahoo.com";
+            string inMobPhone = "0648636782";
+
+            IWebElement firstName = WaitForElement(By.Name("ime"), 2);
+            firstName.SendKeys(inFirstName);
+            IWebElement lastName = WaitForElement(By.Name("prezime"), 2);
+            lastName.SendKeys(inLastName);
+            IWebElement userName = WaitForElement(By.Name("korisnicko"), 2);
+            userName.SendKeys(inUserName);
+            IWebElement email = WaitForElement(By.Name("email"), 2);
+            email.SendKeys(inEmail);
+            IWebElement mobPhone = WaitForElement(By.Name("telefon"), 2);
+            mobPhone.SendKeys(inMobPhone);
+            IWebElement state = WaitForElement(By.XPath("//select[@name='zemlja']/option[@value='srb']"),2);
+            state.Click();
+            IWebElement gender = WaitForElement(By.XPath("//input[@id='pol_m']"),2);
+            gender.Click();
+            IWebElement chkInformation = WaitForElement(By.XPath("//input[@name='obavestenja']"), 2);
+            chkInformation.Click();
+            IWebElement chkMessages = WaitForElement(By.XPath("//input[@name='promocije']"), 2);
+            chkMessages.Click();      
+            Sleep(2);
+
+            IWebElement btnReg = WaitForElement(By.XPath("//input[@value='Registruj se']"), 5);
+            btnReg.Click();
+            Sleep(2);
+ 
+            //bool isReg = driver.FindElement(By.XPath("//div[@class='alert alert-success']/strong")).Displayed;
+            string fn = Convert.ToString(firstName);
+            string ln = Convert.ToString(lastName);
+
+            System.IO.File.AppendAllText("D:\\Selenium\\Test.txt", "Uspeh! Uspesno ste dodali korisnika , " + fn + ln + Environment.NewLine);
+
+            IWebElement table = WaitForElement(By.XPath("//div[@class='col-sm-12']/table"), 2);
+            isDisplayed = Convert.ToString(table.Displayed);
+            IList<IWebElement> allRows = table.FindElements(By.XPath("//td[@class='M']"));
+            foreach (var row in allRows)
+            {
+                System.IO.File.AppendAllText("D:\\Selenium\\Test.txt", row.Text.ToString() + Environment.NewLine);
+            }
+
+        }
+
+        [TearDown]
+        public void BrowserClose()
+        {
+            driver.Close();
+        }
+    }
+}
+
